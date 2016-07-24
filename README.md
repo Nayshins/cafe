@@ -1,24 +1,5 @@
 # Cafe
 
-**TODO: Add description**
+A simple ETS based Key Value store. 
 
-## Installation
-
-If [available in Hex](https://hex.pm/docs/publish), the package can be installed as:
-
-  1. Add `cafe` to your list of dependencies in `mix.exs`:
-
-    ```elixir
-    def deps do
-      [{:cafe, "~> 0.1.0"}]
-    end
-    ```
-
-  2. Ensure `cafe` is started before your application:
-
-    ```elixir
-    def application do
-      [applications: [:cafe]]
-    end
-    ```
-
+## Under Development
