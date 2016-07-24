@@ -15,6 +15,6 @@ defmodule Cafe.Mixfile do
   end
 
   defp deps do
-    []
+    [{:exactor, "~> 2.2.0"}]
   end
 end
