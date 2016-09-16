@@ -1,9 +1,13 @@
 defmodule Cafe do
-  use ExActor.GenServer
+  use GenServer
 
-  defstart start_link(cache_name), genserver_ops: [name: cache_name] do
+  def start_link(cache_name) do
+    GenServer.start_link(__MODULE__, cache_name)
+  end
+
+  def init(cache_name) do
     :ets.new(cache_name, [:named_table, :set, :protected])
-    initial_state(cache_name)
+    {:ok, cache_name}
   end
 
   def get(cache_name, key) do
@@ -13,12 +17,12 @@ defmodule Cafe do
     end
   end
 
-  defcall put(key, value), state: cache_name do
+  def handle_call({:put, key, value}, _from, cache_name) do
     insert(cache_name, key, value)
-    reply(:ok)
+    {:reply, :ok, cache_name}
   end
 
-  defp insert(cache_name, key, value) do
+  def insert(cache_name, key, value) do
     :ets.insert(cache_name, {key, value})
   end
 end
