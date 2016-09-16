@@ -13,12 +13,17 @@ defmodule Cafe do
   def get(cache_name, key) do
     case :ets.lookup(cache_name, key) do
       [{^key, value}] -> {:ok, value}
-      [] -> :error
+      [] -> {:error, :no_key}
     end
   end
 
   def handle_call({:put, key, value}, _from, cache_name) do
     insert(cache_name, key, value)
+    {:reply, :ok, cache_name}
+  end
+
+  def handle_call({:delete, key}, _from, cache_name) do
+    :ets.delete(cache_name, key)
     {:reply, :ok, cache_name}
   end
 
