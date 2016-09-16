@@ -27,7 +27,7 @@ defmodule Cafe do
     {:reply, :ok, cache_name}
   end
 
-  def insert(cache_name, key, value) do
+  defp insert(cache_name, key, value) do
     :ets.insert(cache_name, {key, value})
   end
 end
