@@ -15,19 +15,25 @@ defmodule CafeTest do
       GenServer.call(pid, {:put, "Foo", "Bar"})
       GenServer.call(pid, {:put, "Foo", "Baz"})
 
-      assert {:ok, "Baz"} = Cafe.get(:test_cache, "Foo")
+      assert {:ok, "Baz"} = GenServer.call(pid, {:get, "Foo"})
     end
   end
 
   describe "get/1" do
+    test "does not return a value if it is past expiry time", %{pid: pid} do
+      GenServer.call(pid, {:put, "Foo", "Bar", 0})
+
+      assert {:error, :key_expired} = GenServer.call(pid, {:get, "Foo"})
+    end
+
     test "retrieves a value from the ets table", %{pid: pid} do
       GenServer.call(pid, {:put, "Foo", "Bar"})
 
-      assert {:ok, "Bar"} = Cafe.get(:test_cache, "Foo")
+      assert {:ok, "Bar"} = GenServer.call(pid, {:get, "Foo"})
     end
 
-    test "returns :no_key error when the key does exist" do
-      assert {:error, :no_key} = Cafe.get(:test_cache, "Foo")
+    test "returns :no_key error when the key does exist", %{pid: pid} do
+      assert {:error, :no_key} = GenServer.call(pid, {:get, "Foo"})
     end
   end
 
@@ -35,6 +41,6 @@ defmodule CafeTest do
     GenServer.call(pid, {:put, "Foo", "Baz"})
     assert :ok = GenServer.call(pid, {:delete, "Foo"})
 
-    assert {:error, :no_key} = Cafe.get(:test_cache, "Foo")
+    assert {:error, :no_key} = GenServer.call(pid, {:get, "Foo"})
   end
 end
